@@ -1,7 +1,9 @@
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Locale;
 
@@ -109,11 +111,27 @@ public class Festival {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.getNombre()).append("\n");
-        sb.append(this.getEstilos()).append("\n");
-        sb.append(this.getLugar()).append("\n");
-        sb.append(this.getFechaInicio()).append("\n");
-        sb.append("----------------------------------------\n");
+        sb.append(this.nombre).append("\t\t ").append(this.estilos).append("\n").append(this.lugar.toUpperCase()).append("\n");
+
+        LocalDate fecha = LocalDate.now();
+        String fechaIniFormateada = this.fechaInicio.format(DateTimeFormatter.ofPattern("dd MMM. yyyy"));
+        String fechaIniFormateadaSinAnyo = this.fechaInicio.format(DateTimeFormatter.ofPattern("dd MMM."));
+        LocalDate fechaFinal = fechaInicio.plusDays(duracion);
+        String fechaFinalFormateada = fechaFinal.format(DateTimeFormatter.ofPattern("dd MMM. yyyy"));
+
+        if (duracion == 1){
+            sb.append(fechaIniFormateada);
+        } else {
+            sb.append(fechaIniFormateadaSinAnyo + " - " + fechaFinalFormateada);
+        }
+        if (haConcluido()){
+            sb.append(" (concluido)");
+        } else if (fecha.isAfter(fechaInicio) && fecha.isBefore(fechaFinal)) {
+            sb.append("(ON)");
+        } else {
+            sb.append("(quedan " + ChronoUnit.DAYS.between(LocalDate.now(),fechaInicio) + " dias)");
+        }
+        sb.append("\n----------------------------------------");
         return sb.toString();
 
         
